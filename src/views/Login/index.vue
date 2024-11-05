@@ -4,8 +4,8 @@ import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
 const loginForm = ref({
-  account: '',
-  password: '',
+  account: 'xiaotuxian001',
+  password: '123456',
   agree: false
 })
 
@@ -75,7 +75,7 @@ const sumbit = () => {
                 <el-input v-model="loginForm.account" placeholder="请输入用户名" />
               </el-form-item>
               <el-form-item label="密码" prop="password">
-                <el-input v-model="loginForm.password" placeholder="请输入密码" />
+                <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" />
               </el-form-item>
               <el-form-item label-width="22px" prop="agree">
                 <el-checkbox size="large" v-model="loginForm.agree">

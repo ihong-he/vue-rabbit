@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { loginAPI } from '@/apis/user'
 import { ElMessage } from 'element-plus'
-// import 'element-plus/theme-chalk/el-message.css'
+import 'element-plus/theme-chalk/el-message.css'
 // 引入路由器实例
 import router from '@/router/index'
 
@@ -23,9 +23,15 @@ export const useUserStore = defineStore('user', () => {
     }
 
   }
+
+  // 清除用户信息
+  const clearUserInfo = () => {
+    userInfo.value = {}
+  }
   return {
     userInfo,
-    getUserInfo
+    getUserInfo,
+    clearUserInfo
   }
 }, {
   persist: true,
