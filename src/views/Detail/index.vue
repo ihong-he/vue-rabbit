@@ -3,10 +3,13 @@ import { getDetail } from '@/apis/detail'
 import { ref, onMounted } from 'vue'
 import { useRoute, onBeforeRouteUpdate } from 'vue-router';
 import HotDetail from './components/HotDetail.vue';
+import { ElMessage } from 'element-plus'
+import { useCartStore } from '@/stores/cartStore';
 
 const route = useRoute()
 const goods = ref({})
 const loading = ref(false)
+const cartStore = useCartStore()
 
 // 在路由发生变化时调用
 onBeforeRouteUpdate((to) => {
@@ -22,11 +25,40 @@ const getGoods = (id = route.params.id) => {
     loading.value = false
   })
 }
-
+let skuObj = {}
 // Sku变化
 const changeSku = (val) => {
   console.log('Sku变化:', val);
+  skuObj = val
+}
 
+// count
+let count = ref(1)
+const changeCount = (val) => {
+  console.log(val);
+  
+}
+
+// 加入购物车
+const addCart = () => {
+  // 选择了商品规格
+  if(skuObj.skuId) {
+    // 存储购物车数据
+    cartStore.addCart({
+      id: goods.value.id,
+      name: goods.value.name,
+      picture: goods.value.picture,
+      price: goods.value.price,
+      count: count.value,
+      skuId: skuObj.skuId,
+      attrsText: goods.value.attrsText,
+      selected: true,
+    })
+    
+  }else {
+    // 没有选择商品规格就提示
+    ElMessage({ type: 'warning', message: '请先选择商品规格！' })
+  }
 }
 
 onMounted(() => getGoods())
@@ -108,10 +140,10 @@ onMounted(() => getGoods())
               <!-- sku组件 -->
               <XtxSku :goods="goods" @change="changeSku"></XtxSku>
               <!-- 数据组件 -->
-
+              <el-input-number v-model="count" :min="1" @change="changeCount" />
               <!-- 按钮组件 -->
               <div>
-                <el-button size="large" class="btn">
+                <el-button size="large" class="btn" @click="addCart">
                   加入购物车
                 </el-button>
               </div>
