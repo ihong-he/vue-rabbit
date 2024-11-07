@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useCartStore = defineStore('cart', () => {
@@ -30,10 +30,26 @@ export const useCartStore = defineStore('cart', () => {
     // cartList.value.splice(index, 1)
   }
 
+  // 计算购物车商品总数
+  const allTatal = computed(() => {
+    return cartList.value.reduce((pre, item) => {
+      return pre + item.count
+    }, 0)
+  })
+
+  // 计算商品总额
+  const allPrice = computed(() => {
+    return cartList.value.reduce((pre, item) => {
+      return pre + item.count * item.price
+    }, 0)
+  })
+
   return {
     cartList,
     addCart,
     delCart,
+    allTatal,
+    allPrice,
   }
 },{
   // 持久化store

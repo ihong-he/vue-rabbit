@@ -33,8 +33,8 @@ const cartStore  = useCartStore()
       <el-empty v-else description="空空如也" />
       <div class="foot">
         <div class="total">
-          <p>共 10 件商品</p>
-          <p>&yen; 100.00 </p>
+          <p>共 {{ cartStore.allTatal }} 件商品</p>
+          <p>&yen; {{ cartStore.allPrice.toFixed(2) }} </p>
         </div>
         <el-button size="large" type="primary" >去购物车结算</el-button>
       </div>
