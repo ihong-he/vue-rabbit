@@ -38,6 +38,12 @@ export const useCartStore = defineStore('cart', () => {
     item.selected = selected
   }
 
+  // 全选操作
+  const changeAll = (val) => {
+    // 1. 遍历所有商品，修改selected
+    cartList.value.forEach(item => item.selected = val)
+  }
+
   // 计算购物车商品总数
   const allTatal = computed(() => {
     return cartList.value.reduce((pre, item) => {
@@ -51,6 +57,12 @@ export const useCartStore = defineStore('cart', () => {
       return pre + item.count * item.price
     }, 0)
   })
+
+  // 是否全选
+  const isCheckAll = computed(() => {
+    // 所有商品都被选中，返回true
+    return cartList.value.every(item => item.selected) 
+  })
  
 
   return {
@@ -59,7 +71,9 @@ export const useCartStore = defineStore('cart', () => {
     delCart,
     allTatal,
     allPrice,
-    checkItem
+    checkItem,
+    isCheckAll,
+    changeAll,
   }
 },{
   // 持久化store

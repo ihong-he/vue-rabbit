@@ -2,10 +2,15 @@
 import { useCartStore } from '@/stores/cartStore';
 
 const cartStore = useCartStore()
-// 多选框选中值变化
+// 单选框选中值变化
 const singleCheck = (val, i) => {
   // 修改pinia选中状态
   cartStore.checkItem(val, i.skuId)
+}
+
+// 全选操作
+const changeAll = (val) => {
+  cartStore.changeAll(val)
 }
 </script>
 
@@ -17,7 +22,8 @@ const singleCheck = (val, i) => {
           <thead>
             <tr>
               <th width="120">
-                <el-checkbox  />
+                <!-- 全选 -->
+                <el-checkbox :model-value="cartStore.isCheckAll" @change="changeAll"/>
               </th>
               <th width="400">商品信息</th>
               <th width="220">单价</th>
