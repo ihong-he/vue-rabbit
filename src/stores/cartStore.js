@@ -10,10 +10,10 @@ export const useCartStore = defineStore('cart', () => {
       return item.skuId == goods.skuId
     })
 
-    if(item) {
+    if (item) {
       // 添加过，count++
-      item.count ++;
-    }else {
+      item.count++;
+    } else {
       // 没添加过，直接push
       cartList.value.push(goods)
     }
@@ -61,9 +61,27 @@ export const useCartStore = defineStore('cart', () => {
   // 是否全选
   const isCheckAll = computed(() => {
     // 所有商品都被选中，返回true
-    return cartList.value.every(item => item.selected) 
+    return cartList.value.every(item => item.selected)
   })
- 
+
+  // 计算购物车中选定商品的总数
+  const selectedCount = computed(() => {
+    // 筛选出购物车中被选中的商品
+    return cartList.value.filter(item => item.selected).reduce((pre, item) => {
+      // 累加被选中商品的数量
+      return pre + item.count
+    }, 0)
+  })
+
+  // 计算选中商品的总价格
+  const selectedPrice = computed(() => {
+    // 筛选出购物车中选中的商品
+    return cartList.value.filter(item => item.selected).reduce((pre, item) => {
+      // 累加每个选中商品的价格，计算总价
+      return pre + item.count * item.price
+    }, 0)
+  })
+
 
   return {
     cartList,
@@ -74,8 +92,10 @@ export const useCartStore = defineStore('cart', () => {
     checkItem,
     isCheckAll,
     changeAll,
+    selectedCount,
+    selectedPrice
   }
-},{
+}, {
   // 持久化store
   persist: true,
 })
