@@ -30,6 +30,14 @@ export const useCartStore = defineStore('cart', () => {
     // cartList.value.splice(index, 1)
   }
 
+  // 单选功能
+  const checkItem = (selected, id) => {
+    // 找到要修改的商品
+    const item = cartList.value.find(item => item.skuId === id)
+    // 修改商品选中状态
+    item.selected = selected
+  }
+
   // 计算购物车商品总数
   const allTatal = computed(() => {
     return cartList.value.reduce((pre, item) => {
@@ -43,6 +51,7 @@ export const useCartStore = defineStore('cart', () => {
       return pre + item.count * item.price
     }, 0)
   })
+ 
 
   return {
     cartList,
@@ -50,6 +59,7 @@ export const useCartStore = defineStore('cart', () => {
     delCart,
     allTatal,
     allPrice,
+    checkItem
   }
 },{
   // 持久化store

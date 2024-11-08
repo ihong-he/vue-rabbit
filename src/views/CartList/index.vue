@@ -2,6 +2,11 @@
 import { useCartStore } from '@/stores/cartStore';
 
 const cartStore = useCartStore()
+// 多选框选中值变化
+const singleCheck = (val, i) => {
+  // 修改pinia选中状态
+  cartStore.checkItem(val, i.skuId)
+}
 </script>
 
 <template>
@@ -12,7 +17,7 @@ const cartStore = useCartStore()
           <thead>
             <tr>
               <th width="120">
-                <el-checkbox/>
+                <el-checkbox  />
               </th>
               <th width="400">商品信息</th>
               <th width="220">单价</th>
@@ -25,7 +30,8 @@ const cartStore = useCartStore()
           <tbody>
             <tr v-for="i in cartStore.cartList" :key="i.id">
               <td>
-                <el-checkbox />
+                <!-- 单选框 -->
+                <el-checkbox :model-value="i.selected" @change="singleCheck($event, i)"/>
               </td>
               <td>
                 <div class="goods">
