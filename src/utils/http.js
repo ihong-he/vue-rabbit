@@ -1,6 +1,6 @@
 import axios from 'axios'
 import 'element-plus/theme-chalk/el-message.css'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/userStore'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
 

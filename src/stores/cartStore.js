@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { addCartAPI, getCartListAPI } from '@/apis/cart'
-import { useUserStore } from './user'
+import { addCartAPI, getCartListAPI, delCartAPI } from '@/apis/cart'
+import { useUserStore } from './userStore'
 import { ElMessage } from 'element-plus'
 
 export const useCartStore = defineStore('cart', () => {
@@ -17,11 +17,7 @@ export const useCartStore = defineStore('cart', () => {
         if (res.code == 1) {
           ElMessage({ type: 'success', message: '添加购物车成功' })
           // 2. 如果添加成功，重新获取购物车列表
-          getCartListAPI().then(response => { 
-            console.log('response', response);
-            // 3. 赋值给cartList
-            cartList.value = response.result
-          })
+          getCartList()
         } else {
           ElMessage({ type: 'error', message: '添加购物车失败' })
         }
@@ -48,13 +44,36 @@ export const useCartStore = defineStore('cart', () => {
 
   // 删除购物车
   const delCart = (id) => {
-    // 找到要删除的商品
-    // 1. 找到要删除的商品的索引值,通过slice删除
-    // const index = cartList.value.findIndex(item => item.skuId === id)
-    // 1. 通过filter删除
-    cartList.value = cartList.value.filter(item => item.skuId !== id)
-    // 2. 删除商品
-    // cartList.value.splice(index, 1)
+    if (isLogin) {
+      delCartAPI({ 'ids': [id] }).then(res => {
+        console.log(res);
+        if (res.code == 1) {
+          // 删除成功，重新获取购物车列表
+          getCartList()
+          ElMessage({ type: 'success', message: '操作成功！' })
+        }
+      })
+
+    } else {
+      // 找到要删除的商品
+      // 1. 找到要删除的商品的索引值,通过slice删除
+      // const index = cartList.value.findIndex(item => item.skuId === id)
+      // 1. 通过filter删除
+      cartList.value = cartList.value.filter(item => item.skuId !== id)
+      // 2. 删除商品
+      // cartList.value.splice(index, 1)
+    }
+
+  }
+
+  // 获取购物车列表
+  const getCartList = () => {
+    // 1. 获取购物车列表
+    getCartListAPI().then(response => {
+      console.log('response', response);
+      // 2. 赋值给cartList
+      cartList.value = response.result
+    })
   }
 
   // 单选功能
