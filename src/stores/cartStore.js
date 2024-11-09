@@ -1,22 +1,49 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { addCartAPI, getCartListAPI } from '@/apis/cart'
+import { useUserStore } from './user'
+import { ElMessage } from 'element-plus'
 
 export const useCartStore = defineStore('cart', () => {
   const cartList = ref([])
+  const userStore = useUserStore()
+  const isLogin = computed(() => userStore.userInfo.token)
   // 添加购物车
   const addCart = (goods) => {
-    // 判断商品是否添加过购物车
-    const item = cartList.value.find(item => {
-      return item.skuId == goods.skuId
-    })
+    if (isLogin) {
+      // 1. 如果登录了，调用添加购物车接口
+      addCartAPI(goods).then(res => {
+        console.log(res);
+        if (res.code == 1) {
+          ElMessage({ type: 'success', message: '添加购物车成功' })
+          // 2. 如果添加成功，重新获取购物车列表
+          getCartListAPI().then(response => { 
+            console.log('response', response);
+            // 3. 赋值给cartList
+            cartList.value = response.result
+          })
+        } else {
+          ElMessage({ type: 'error', message: '添加购物车失败' })
+        }
 
-    if (item) {
-      // 添加过，count++
-      item.count++;
+      })
+
     } else {
-      // 没添加过，直接push
-      cartList.value.push(goods)
+      // 如果未登录，修改本地购物车数据
+      // 判断商品是否添加过购物车
+      const item = cartList.value.find(item => {
+        return item.skuId == goods.skuId
+      })
+
+      if (item) {
+        // 添加过，count++
+        item.count++;
+      } else {
+        // 没添加过，直接push
+        cartList.value.push(goods)
+      }
     }
+
   }
 
   // 删除购物车
