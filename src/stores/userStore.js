@@ -5,11 +5,14 @@ import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/el-message.css'
 // 引入路由器实例
 import router from '@/router/index'
+import { useCartStore } from './cartStore'
 
 // 获取用户信息store
 export const useUserStore = defineStore('user', () => {
   // 用户信息
   const userInfo = ref({})
+  // 获取购物车store
+  const cartStore = useCartStore()
   // 获取用户信息方法
   const getUserInfo = async ({ account, password }) => {
     const res = await loginAPI({ account, password })
@@ -27,6 +30,8 @@ export const useUserStore = defineStore('user', () => {
   // 清除用户信息
   const clearUserInfo = () => {
     userInfo.value = {}
+    // 清除购物车数据
+    cartStore.clearCart()
   }
   return {
     userInfo,

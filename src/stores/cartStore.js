@@ -76,6 +76,11 @@ export const useCartStore = defineStore('cart', () => {
     })
   }
 
+  // 清除购物车数据
+  const clearCart = () => {
+    cartList.value = []
+  }
+
   // 单选功能
   const checkItem = (selected, id) => {
     // 找到要修改的商品
@@ -139,7 +144,8 @@ export const useCartStore = defineStore('cart', () => {
     isCheckAll,
     changeAll,
     selectedCount,
-    selectedPrice
+    selectedPrice,
+    clearCart
   }
 }, {
   // 持久化store
