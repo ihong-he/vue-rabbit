@@ -24,3 +24,12 @@ export const delCartAPI = (ids) => {
     data:ids
   })
 }
+
+// 合并本地购物车到服务器
+export const mergeCartAPI = (data) => {
+  return http({
+    url:'/member/cart/merge',
+    method:'post',
+    data
+  })
+}

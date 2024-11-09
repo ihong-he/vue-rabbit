@@ -6,6 +6,7 @@ import 'element-plus/theme-chalk/el-message.css'
 // 引入路由器实例
 import router from '@/router/index'
 import { useCartStore } from './cartStore'
+import { mergeCartAPI } from '@/apis/cart'
 
 // 获取用户信息store
 export const useUserStore = defineStore('user', () => {
@@ -19,6 +20,16 @@ export const useUserStore = defineStore('user', () => {
     if (res.code == 1) {
       // 1. 给userInfo赋值
       userInfo.value = res.result
+      // 合并购物车数据
+      await mergeCartAPI(cartStore.cartList.map(item => {
+        return {
+          skuId: item.skuId,
+          selected: item.selected,
+          count: item.count
+        }
+      }))
+      // 刷新购物车数据
+      cartStore.getCartList()
       // 2. 提示用户
       ElMessage({ type: 'success', message: '登录成功' })
       // 3. 跳转首页

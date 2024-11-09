@@ -145,7 +145,8 @@ export const useCartStore = defineStore('cart', () => {
     changeAll,
     selectedCount,
     selectedPrice,
-    clearCart
+    clearCart,
+    getCartList
   }
 }, {
   // 持久化store
