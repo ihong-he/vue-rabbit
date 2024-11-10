@@ -4,6 +4,7 @@ import { getOrderInfoAPI } from '@/apis/checkout'
 
 const checkInfo = ref({})  // 订单对象
 const curAddress = ref({})  // 地址对象
+const toggleFlag = ref(false)  // 切换地址弹窗的显示与隐藏
 
 // 获取订单信息
 const getOrderInfo = () => {
@@ -11,8 +12,21 @@ const getOrderInfo = () => {
     checkInfo.value = res.result
     // 获取默认地址
     curAddress.value = checkInfo.value.userAddresses.filter(item => item.isDefault === 0)[0]
-    
+
   })
+}
+
+// 激活项
+const activeItem = ref({})
+// 切换地址
+const changeAddress = (item) => {
+  activeItem.value = item
+}
+// 确认切换地址
+const onConfirm = () => {
+  curAddress.value = activeItem.value
+  toggleFlag.value = false
+  activeItem.value = {}
 }
 
 // 初始化数据
@@ -112,10 +126,29 @@ onMounted(() => getOrderInfo())
         </div>
         <!-- 提交订单 -->
         <div class="submit">
-          <el-button type="primary" size="large" >提交订单</el-button>
+          <el-button type="primary" size="large">提交订单</el-button>
         </div>
       </div>
     </div>
+    <!-- 切换地址弹窗 -->
+    <el-dialog v-model="toggleFlag" title="切换收货地址" width="50%" center>
+      <div class="addressWrapper">
+        <div class="text item" :class="{ active: activeItem.id == item.id }" @click="changeAddress(item)"
+          v-for="item in checkInfo.userAddresses" :key="item.id">
+          <ul>
+            <li><span>收<i />货<i />人：</span>{{ item.receiver }} </li>
+            <li><span>联系方式：</span>{{ item.contact }}</li>
+            <li><span>收货地址：</span>{{ item.fullLocation + item.address }}</li>
+          </ul>
+        </div>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button>取消</el-button>
+          <el-button type="primary" @click="onConfirm">确定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
   <!-- 切换地址 -->
   <!-- 添加地址 -->
