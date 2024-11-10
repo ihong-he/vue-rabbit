@@ -34,7 +34,7 @@ const changeAll = (val) => {
           </thead>
           <!-- 商品列表 -->
           <tbody>
-            <tr v-for="i in cartStore.cartList" :key="i.id">
+            <tr v-for="i in cartStore.cartList" :key="i.skuId">
               <td>
                 <!-- 单选框 -->
                 <el-checkbox :model-value="i.selected" @change="singleCheck($event, i)"/>
@@ -60,7 +60,7 @@ const changeAll = (val) => {
               </td>
               <td class="tc">
                 <p>
-                  <el-popconfirm title="确认删除吗?" confirm-button-text="确认" cancel-button-text="取消" @confirm="delCart(i)">
+                  <el-popconfirm title="确认删除吗?" confirm-button-text="确认" cancel-button-text="取消" @confirm="cartStore.delCart(i.skuId)">
                     <template #reference>
                       <a href="javascript:;">删除</a>
                     </template>
@@ -71,8 +71,8 @@ const changeAll = (val) => {
             <tr v-if="cartStore.cartList.length === 0">
               <td colspan="6">
                 <div class="cart-none">
-                  <el-empty description="购物车列表为空">
-                    <el-button type="primary">随便逛逛</el-button>
+                  <el-empty description="空空如也">
+                    <el-button type="primary" @click="$router.push('/')">随便逛逛</el-button>
                   </el-empty>
                 </div>
               </td>
