@@ -1,7 +1,9 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { getOrderInfoAPI } from '@/apis/checkout'
+import { getOrderInfoAPI, submitOrderAPI } from '@/apis/checkout'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const checkInfo = ref({})  // 订单对象
 const curAddress = ref({})  // 地址对象
 const toggleFlag = ref(false)  // 切换地址弹窗的显示与隐藏
@@ -27,6 +29,33 @@ const onConfirm = () => {
   curAddress.value = activeItem.value
   toggleFlag.value = false
   activeItem.value = {}
+}
+
+// 提交订单
+const createOrder = () => {
+  submitOrderAPI({
+    "deliveryTimeType": 1,
+    "payType": 1,
+    "payChannel": 1,
+    "buyerMessage": "",
+    "goods": checkInfo.value.goods.map(item => {
+      return {
+        "count": item.count,
+        "skuId": item.skuId
+      }
+    }),
+    "addressId": curAddress.value.id
+  }).then(res => {
+    console.log(res)
+    const id = res.result.id
+    // 跳转到支付页
+    router.push({
+      path: '/pay',
+      query: {
+        id
+      }
+    })
+  })
 }
 
 // 初始化数据
@@ -126,7 +155,7 @@ onMounted(() => getOrderInfo())
         </div>
         <!-- 提交订单 -->
         <div class="submit">
-          <el-button type="primary" size="large">提交订单</el-button>
+          <el-button type="primary" size="large" @click="createOrder">提交订单</el-button>
         </div>
       </div>
     </div>
