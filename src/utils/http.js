@@ -28,8 +28,11 @@ instance.interceptors.response.use(res => res.data,
       // 清空用户信息
       const userStore = useUserStore()
       userStore.clearUserInfo()
-      // 跳转到登录页
-      router.push('/login')
+      // 记录当前路径
+      const currentPath = router.currentRoute.value.fullPath;
+      console.log('currentPath:', currentPath);
+      // 跳转到登录页，参数携带当前路径信息
+      router.replace({ path: '/login', query: { redirect: currentPath }})
     }
     return Promise.reject(err)
   })

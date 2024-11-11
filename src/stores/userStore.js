@@ -32,8 +32,11 @@ export const useUserStore = defineStore('user', () => {
       cartStore.getCartList()
       // 2. 提示用户
       ElMessage({ type: 'success', message: '登录成功' })
-      // 3. 跳转首页
-      router.replace({ path: '/' })
+      console.log('router:', router.currentRoute._value.query.redirect);
+      // 获取当前页面query参数
+      const query = router.currentRoute._value.query.redirect
+      // 3. 跳转页面
+      router.replace({ path: query || '/' })
     }
 
   }
