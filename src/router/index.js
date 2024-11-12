@@ -71,6 +71,7 @@ const router = createRouter({
       {
         path: '/member',
         name: 'Member',
+        redirect: '/member/user', // 默认跳转我的信息
         component: Member,
         children: [
           // 个人中心-我的信息路由
