@@ -19,9 +19,23 @@ const params = {
     page: 1,
     pageSize: 2
 }
+
+let loading = ref(false)
 const getOrderList = async () => {
+    loading.value = true
     const res = await getUserOrder(params)
-    orderList.value = res.result.items
+    if (res.code === '1') {
+        loading.value = false
+        orderList.value = res.result.items
+    }
+
+}
+
+const handleTabChange = (val) => {
+    console.log(val);
+    params.orderState = val
+    // 重新获取数据
+    getOrderList()
 }
 
 onMounted(() => { getOrderList() })
@@ -30,12 +44,12 @@ onMounted(() => { getOrderList() })
 
 <template>
     <div class="order-container">
-        <el-tabs>
+        <el-tabs @tab-change="handleTabChange">
             <!-- tab切换 -->
             <el-tab-pane v-for="item in tabTypes" :key="item.name" :label="item.label" />
 
-            <div class="main-container">
-                <div class="holder-container" v-if="orderList.length === 0">
+            <div class="main-container" v-loading="loading" element-loading-text="Loading...">
+                <div class="holder-container" v-if="!loading && orderList.length === 0">
                     <el-empty description="暂无订单数据" />
                 </div>
                 <div v-else>
