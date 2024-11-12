@@ -9,6 +9,9 @@ import CartList from '@/views/CartList/index.vue'
 import Checkout from '@/views/Checkout/index.vue'
 import Pay from '@/views/Pay/index.vue'
 import PayBack from '@/views/Pay/PayBack.vue'
+import Member from '@/views/Member/index.vue'
+import UserInfo from '@/views/Member/components/UserInfo.vue'
+import UserOrder from '@/views/Member/components/UserOrder.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -63,6 +66,26 @@ const router = createRouter({
         path: '/paycalback',
         name: 'PayBack',
         component: PayBack,
+      },
+      // 个人中心路由
+      {
+        path: '/member',
+        name: 'Member',
+        component: Member,
+        children: [
+          // 个人中心-我的信息路由
+          {
+            path: 'user',
+            name: 'UserInfo',
+            component: UserInfo,
+          },
+          // 个人中心-我的订单路由
+          {
+            path: 'order',
+            name: 'UserOrder',
+            component: UserOrder,
+          },
+        ]
       },
       ]
     },
