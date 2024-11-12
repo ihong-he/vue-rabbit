@@ -15,3 +15,13 @@ export function loginAPI({ account, password }) {
     }
   })
 }
+
+// 获取喜欢数据
+export const getLikeListAPI = ({ limit = 4 }) => {
+  return http({
+    url:'/goods/relevant',
+    params: {
+      limit 
+    }
+  })
+}
