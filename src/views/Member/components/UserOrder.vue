@@ -1,6 +1,10 @@
 <script setup>
 import { ref, onMounted } from "vue"
 import { getUserOrder } from "@/apis/user"
+import { useCountDown } from '@/composables/useCountDown'
+
+// 解构倒计时逻辑
+const { formatTime, startCountDown } = useCountDown()
 
 // 创建格式化函数
 const fomartPayState = (payState) => {
@@ -31,6 +35,8 @@ const getOrderList = async () => {
         loading.value = false
         orderList.value = res.result.items
         total.value = res.result.counts
+        // 开始倒计时
+        startCountDown(orderList.value[0].countdown)
     }
 
 }
@@ -72,7 +78,7 @@ onMounted(() => { getOrderList() })
                             <!-- 未付款，倒计时时间还有 -->
                             <span class="down-time" v-if="order.orderState === 1">
                                 <i class="iconfont icon-down-time"></i>
-                                <b>付款截止: {{ order.countdown }}</b>
+                                <b>付款截止: {{ formatTime }}</b>
                             </span>
                         </div>
                         <div class="body">

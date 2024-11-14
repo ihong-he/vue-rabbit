@@ -37,7 +37,8 @@ const getGoods = () => {
 
 const handleTabChange = (val) => {
   // console.log('val:', val);
-
+  // 注：后端接口没做切换功能
+  reqData.value.sortField = val
   reqData.value.page = 1
   getGoods()
 }
@@ -56,8 +57,6 @@ const load = () => {
       disabled.value = true
     }
   })
-
-
 
 }
 
